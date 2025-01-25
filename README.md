@@ -6,6 +6,8 @@ Media Assset Block for the [Editor.js](https://editorjs.io).
 This is a fork of the medial block : https://github.com/envidual/editorjs-media, which in turn is a fork of the original image block : https://github.com/editor-js/image
 
 
+![Example Image](example.jpg)
+
 > [!Warning]
 > This is in alpha stage and not yet ready for production use.
 
