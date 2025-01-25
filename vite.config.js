@@ -10,8 +10,8 @@ export default {
     copyPublicDir: false,
     lib: {
       entry: path.resolve(__dirname, "src", "index.js"),
-      name: "MediaTool",
-      fileName: "calumk-editorjs-media-tool",
+      name: "MediaAssetTool",
+      fileName: "calumk-editorjs-media-asset-tool",
     },
   },
   define: {

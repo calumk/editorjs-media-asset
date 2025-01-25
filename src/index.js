@@ -1,9 +1,8 @@
 /**
- * Image Tool for the Editor.js
+ * Media Asset Tool for the Editor.js
  *
  * @author Calum Knott <calum@calumk.com>
  * @license MIT
- * @see {@link https://github.com/editor-js/image}
  *
  * To developers.
  * To simplify Tool structure, we split it to 4 parts:
@@ -20,7 +19,7 @@
  * It will expose 8008 port, so you can pass http://localhost:8008 with the Tools config:
  *
  * media: {
- *   class: MediaTool,
+ *   class: MediaAssetTool,
  *   config: {
  *     endpoints: {
  *       byFile: 'http://localhost:8008/uploadFile',
@@ -31,7 +30,7 @@
  */
 
 /**
- * @typedef {object} MediaToolData
+ * @typedef {object} MediaAssetToolData
  * @description Image Tool's input and output data format
  * @property {string} caption — media caption
  * @property {boolean} withBorder - should media be rendered with border
@@ -49,9 +48,10 @@ import Uploader from './uploader';
 import { IconAddBorder, IconStretch, IconAddBackground, IconPicture } from '@codexteam/icons';
 
 
-let IconLink = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><path d="M141.38,64.68l11-11a46.62,46.62,0,0,1,65.94,0h0a46.62,46.62,0,0,1,0,65.94L193.94,144,183.6,154.34a46.63,46.63,0,0,1-66-.05h0A46.48,46.48,0,0,1,104,120.06" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><path d="M114.62,191.32l-11,11a46.63,46.63,0,0,1-66-.05h0a46.63,46.63,0,0,1,.06-65.89L72.4,101.66a46.62,46.62,0,0,1,65.94,0h0A46.45,46.45,0,0,1,152,135.94" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>`
+let IconLink = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><path d="M108.71,197.23l-5.11,5.11a46.63,46.63,0,0,1-66-.05h0a46.63,46.63,0,0,1,.06-65.89L72.4,101.66a46.62,46.62,0,0,1,65.94,0h0A46.34,46.34,0,0,1,150.78,124" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/><path d="M147.29,58.77l5.11-5.11a46.62,46.62,0,0,1,65.94,0h0a46.62,46.62,0,0,1,0,65.94L193.94,144,183.6,154.34a46.63,46.63,0,0,1-66-.05h0A46.46,46.46,0,0,1,105.22,132" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="24"/></svg>`
+let IconFile = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><rect width="256" height="256" fill="none"/><path d="M200,224H56a8,8,0,0,1-8-8V40a8,8,0,0,1,8-8h96l56,56V216A8,8,0,0,1,200,224Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="152 32 152 88 208 88" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><polyline points="104 144 128 120 152 144" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/><line x1="128" y1="184" x2="128" y2="120" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="16"/></svg>`
 /**
- * @typedef {object} MediaConfig
+ * @typedef {object} MediaAssetConfig
  * @description Config supported by Tool
  * @property {object} endpoints - upload endpoints
  * @property {string} endpoints.byFile - upload by file
@@ -76,7 +76,7 @@ let IconLink = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256"><r
  *                           also can contain any additional data that will be saved and passed back
  * @property {string} file.url - [Required] media source URL
  */
-export default class MediaTool {
+export default class MediaAssetTool {
   /**
    * Notify core that read-only mode is supported
    *
@@ -95,8 +95,8 @@ export default class MediaTool {
    */
   static get toolbox() {
     return {
-      icon: IconPicture,
-      title: 'Media',
+      icon: IconFile,
+      title: 'Media Asset',
     };
   }
 
@@ -130,8 +130,8 @@ export default class MediaTool {
 
   /**
    * @param {object} tool - tool properties got from editor.js
-   * @param {MediaToolData} tool.data - previously saved data
-   * @param {MediaConfig} tool.config - user config for Tool
+   * @param {MediaAssetToolData} tool.data - previously saved data
+   * @param {MediaAssetConfig} tool.config - user config for Tool
    * @param {object} tool.api - Editor.js API
    * @param {boolean} tool.readOnly - read-only mode flag
    * @param {BlockAPI|{}} tool.block - current Block API
@@ -149,7 +149,7 @@ export default class MediaTool {
       additionalRequestData: config.additionalRequestData || {},
       additionalRequestHeaders: config.additionalRequestHeaders || {},
       field: config.field || 'media',
-      types: config.types || 'image/*,audio/*,video/*',
+      types: config.types || 'image/*,audio/*,video/*,application/pdf,application/msword,application/vnd.ms-excel,application/vnd.ms-powerpoint,application/zip,application/x-rar-compressed,application/x-7z-compressed',
       captionPlaceholder: this.api.i18n.t(config.captionPlaceholder || 'Caption'),
       buttonContent: config.buttonContent || '',
       uploader: config.uploader || undefined,
@@ -202,7 +202,7 @@ export default class MediaTool {
   /**
    * Validate data: check if Image exists
    *
-   * @param {MediaToolData} savedData — data received after saving
+   * @param {MediaAssetToolData} savedData — data received after saving
    * @returns {boolean} false if saved data is not correct, otherwise true
    * @public
    */
@@ -215,7 +215,7 @@ export default class MediaTool {
    *
    * @public
    *
-   * @returns {MediaToolData}
+   * @returns {MediaAssetToolData}
    */
   save() {
     const caption = this.ui.nodes.caption;
@@ -235,7 +235,7 @@ export default class MediaTool {
   renderSettings() {
     // Merge default tunes with the ones that might be added by user
     // @see https://github.com/editor-js/image/pull/49
-    const tunes = MediaTool.tunes.concat(this.config.actions);
+    const tunes = MediaAssetTool.tunes.concat(this.config.actions);
 
     let changeUrl = {
       name: 'changeUrl',
@@ -364,7 +364,7 @@ export default class MediaTool {
    *
    * @private
    *
-   * @param {MediaToolData} data - data in Image Tool format
+   * @param {MediaAssetToolData} data - data in Image Tool format
    */
   set data(data) {
     this.media = data.file;
@@ -372,7 +372,7 @@ export default class MediaTool {
     this._data.caption = data.caption || '';
     this.ui.fillCaption(this._data.caption);
 
-    MediaTool.tunes.forEach(({ name: tune }) => {
+    MediaAssetTool.tunes.forEach(({ name: tune }) => {
       const value = typeof data[tune] !== 'undefined' ? data[tune] === true || data[tune] === 'true' : false;
 
       this.setTune(tune, value);
@@ -384,7 +384,7 @@ export default class MediaTool {
    *
    * @private
    *
-   * @returns {MediaToolData}
+   * @returns {MediaAssetToolData}
    */
   get data() {
     return this._data;
@@ -430,7 +430,7 @@ export default class MediaTool {
    */
   uploadingFailed(errorText) {
 
-    console.log('Media Tool: uploading failed because of', errorText);
+    console.log('Media Asset Tool: uploading failed because of', errorText);
 
     this.api.notifier.show({
       message: this.api.i18n.t('Couldn’t upload medium. Please try another.'),
