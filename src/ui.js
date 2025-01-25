@@ -94,9 +94,12 @@ export default class Ui {
    * @returns {Element}
    */
   render(toolData) {
+    // console.log("RENDER", toolData) 
     if (!toolData.file || Object.keys(toolData.file).length === 0) {
+      // console.log("EMPTY")
       this.toggleStatus(Ui.status.EMPTY);
     } else {
+      // console.log("UPLOADING")
       this.toggleStatus(Ui.status.UPLOADING);
     }
 
@@ -128,9 +131,7 @@ export default class Ui {
    */
    createDownloadFileButton(src) {
     const button = make('div', ['ck-download-button']);
-
     button.innerHTML = this.config.buttonContent || `${this.api.i18n.t('Download:')} ${src.split('/').pop()}`;
-
     button.addEventListener('click', () => {
       // download the file
       window.open(src, '_blank');
@@ -189,7 +190,7 @@ export default class Ui {
     // check for common image extensions for html5 img tag (jpg, jpeg, png, gif, svg)
 
 
-    console.log(url);
+    // console.log(url);
     let tag;
     if (url.endsWith(".mp4") || url.endsWith(".webm") || url.endsWith(".ogg")) {
       tag = "VIDEO";
@@ -253,16 +254,8 @@ export default class Ui {
      */
 
     if (tag === 'DOWNLOAD') {
-      // this.nodes.mediaEl = make('a', 'media-tool__download', {
-      //   href: url,
-      //   download: url,
-      //   innerText: "Download"
-      // });
-
+      eventName = 'divLoaded';
       this.nodes.mediaEl = this.createDownloadFileButton(url);
-      console.log(this.nodes.mediaEl);
-
-      // this.nodes.mediaContainer.appendChild(downloadButton);
     }else{
       this.nodes.mediaEl = make(tag, this.CSS.mediaEl, attributes);
     }
@@ -271,36 +264,35 @@ export default class Ui {
      * Add load event listener
      */
 
-    if (tag == 'DOWNLOAD') {
-
-      // This timeout is a hack to maks sure the preloader is visible before the download button is shown, otherwise the preloader fires after the download button is shown
-      setTimeout(() => {
-        console.log("Fires2")
+    this.nodes.mediaEl.addEventListener(eventName, () => {
+      // console.log("Fires2025", eventName)
+      // console.log(Ui.status)
+      
+      requestAnimationFrame(() => {
         this.toggleStatus(Ui.status.FILLED);
-        /**
-         * Preloader does not exists on first rendering with presaved data
-         */
-        if (this.nodes.mediaPreloader) {
-          this.nodes.mediaPreloader.style.backgroundImage = '';
-        }
-        console.log("end")
-      }, 100);
-    }else{
-      this.nodes.mediaEl.addEventListener(eventName, () => {
-        console.log("Fires")
-        this.toggleStatus(Ui.status.FILLED);
-        /**
-         * Preloader does not exists on first rendering with presaved data
-         */
-        if (this.nodes.mediaPreloader) {
-          this.nodes.mediaPreloader.style.backgroundImage = '';
-        }
       });
-    }
+
+      // this.toggleStatus(Ui.status.UPLOADING);
+      /**
+       * Preloader does not exists on first rendering with presaved data
+       */
+      if (this.nodes.mediaPreloader) {
+        this.nodes.mediaPreloader.style.backgroundImage = '';
+      }
+    });
+  
 
     this.nodes.mediaContainer.innerHTML = '';
-
     this.nodes.mediaContainer.appendChild(this.nodes.mediaEl);
+
+    if (tag == 'DOWNLOAD') {
+      const _event = new Event('divLoaded');
+      this.nodes.mediaEl.dispatchEvent(_event);
+    }
+
+    // this.hidePreloader();
+    // Ui.status
+
   }
 
   /**
@@ -322,9 +314,12 @@ export default class Ui {
    * @returns {void}
    */
   toggleStatus(status) {
+    // console.log("AAA")
+
     for (const statusType in Ui.status) {
       if (Object.prototype.hasOwnProperty.call(Ui.status, statusType)) {
         this.nodes.wrapper.classList.toggle(`${this.CSS.wrapper}--${Ui.status[statusType]}`, status === Ui.status[statusType]);
+        // console.log(`${this.CSS.wrapper}--${Ui.status[statusType]}`, status === Ui.status[statusType]);
       }
     }
   }

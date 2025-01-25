@@ -27,7 +27,7 @@ export default class Uploader {
    * @param {Function} onPreview - callback fired when preview is ready
    */
   uploadSelectedFile({ onPreview }) {
-    console.log('a')
+    // console.log('a')
     const preparePreview = function (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -36,14 +36,14 @@ export default class Uploader {
       };
     };
 
-    console.log('b')
+    // console.log('b')
     /**
      * Custom uploading
      * or default uploading
      */
     let upload;
 
-    console.log('c')
+    // console.log('c')
 
     // custom uploading
     if (this.config.uploader && typeof this.config.uploader.uploadByFile === 'function') {

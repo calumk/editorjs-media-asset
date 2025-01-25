@@ -33,6 +33,16 @@ let example_data = {
 					}
 				},
 				{
+					"id" : "4ATd90hfol",
+					"type" : "media",
+					"data" : {
+						"file" : {
+							"url" : "http://localhost:56738/dev/testfiles/1.pdf"
+						},
+						"caption" : "This is a file :)"
+					}
+				},
+				{
 					"id" : "9mD5ayC_0Z",
 					"type" : "paragraph",
 					"data" : {

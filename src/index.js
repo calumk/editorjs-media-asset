@@ -436,6 +436,7 @@ export default class MediaAssetTool {
       message: this.api.i18n.t('Couldn’t upload medium. Please try another.'),
       style: 'error',
     });
+    
     this.ui.hidePreloader();
   }
 
