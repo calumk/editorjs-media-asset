@@ -16,12 +16,12 @@
   "files": [
     "dist"
   ],
-  "main": "./dist/media-asset.umd.js",
-  "module": "./dist/media-asset.mjs",
+  "main": "./dist/calumk-editorjs-media-asset-tool.umd.js",
+  "module": "./dist/calumk-editorjs-media-asset-tool.mjs",
   "exports": {
     ".": {
-      "import": "./dist/media-asset.mjs",
-      "require": "./dist/media-asset.umd.js"
+      "import": "./dist/calumk-editorjs-media-asset-tool.mjs",
+      "require": "./dist/calumk-editorjs-media-asset-tool.umd.js"
     }
   },
   "scripts": {
