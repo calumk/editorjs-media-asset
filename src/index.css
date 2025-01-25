@@ -168,6 +168,8 @@
   &:hover {
     background-color: var(--bg-color);
   }
+
+  
 }
 
 @keyframes media-preloader-spin {
