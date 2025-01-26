@@ -38,6 +38,7 @@
  * @property {boolean} stretched - should media be stretched to full width of container
  * @property {object} file — Image file data returned from backend
  * @property {string} file.url — media URL
+ * @property {string} file.type — media type, image, video, file
  */
 
 import './index.css';
@@ -436,7 +437,7 @@ export default class MediaAssetTool {
       message: this.api.i18n.t('Couldn’t upload medium. Please try another.'),
       style: 'error',
     });
-    
+
     this.ui.hidePreloader();
   }
 

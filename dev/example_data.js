@@ -54,6 +54,16 @@ let example_data = {
 					"type" : "media",
 					"data" : {
 						"file" : {
+							"url" : "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny22.mp4"
+						},
+						"caption" : "Big Buck"
+					}
+				},
+				{
+					"id" : "Q3_MVDGIXi",
+					"type" : "media",
+					"data" : {
+						"file" : {
 							"url" : "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
 						},
 						"caption" : "Big Buck"
@@ -64,6 +74,16 @@ let example_data = {
 					"type" : "paragraph",
 					"data" : {
 						"text" : "This is an example of an image"
+					}
+				},
+				{
+					"id" : "Y8Dlcng67y",
+					"type" : "media",
+					"data" : {
+						"file" : {
+							"url" : "https://www.tesla.com/tesla_theme/assets/img/_vehicle_redesign/roadster_and_semi/roadster/hero22.jpg"
+						},
+						"caption" : "Roadster // tesla.com"
 					}
 				},
 				{

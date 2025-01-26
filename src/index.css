@@ -117,6 +117,29 @@
     }
   }
 
+
+  &--failed {
+    ^&__media {
+      min-height: 50px;
+      display: flex;
+      border: 1px solid  #f00;
+      border-radius: 3px;
+      padding:5px;
+      /* background-color: #f00; */
+
+      &-preloader {
+        display: none;
+      }
+
+      .url{
+        color: #f00;
+        font-size: 12px;
+        margin-top: 5px;
+      }
+    }
+  }
+
+
   /**
    * Tunes
    * ----------------

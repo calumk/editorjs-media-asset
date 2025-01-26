@@ -84,6 +84,7 @@ export default class Ui {
       EMPTY: 'empty',
       UPLOADING: 'loading',
       FILLED: 'filled',
+      FAILED: 'failed'
     };
   }
 
@@ -264,9 +265,12 @@ export default class Ui {
      * Add load event listener
      */
 
+    let eventFired = false;
+
     this.nodes.mediaEl.addEventListener(eventName, () => {
       // console.log("Fires2025", eventName)
       // console.log(Ui.status)
+      eventFired = true;
       
       requestAnimationFrame(() => {
         this.toggleStatus(Ui.status.FILLED);
@@ -290,8 +294,11 @@ export default class Ui {
       this.nodes.mediaEl.dispatchEvent(_event);
     }
 
-    // this.hidePreloader();
-    // Ui.status
+    setTimeout(() => {
+      if (!eventFired) {
+        this.toggleStatus(Ui.status.FAILED);
+      }
+    },4000);
 
   }
 
@@ -321,6 +328,11 @@ export default class Ui {
         this.nodes.wrapper.classList.toggle(`${this.CSS.wrapper}--${Ui.status[statusType]}`, status === Ui.status[statusType]);
         // console.log(`${this.CSS.wrapper}--${Ui.status[statusType]}`, status === Ui.status[statusType]);
       }
+    }
+
+    if (status === Ui.status.FAILED) {
+      console.log(this)
+      this.nodes.mediaContainer.innerHTML = `<div class="ck-media-error"><b>Error loading Asset</b> <br> <span class="url">${this.nodes.mediaEl.src} </span></div>`;
     }
   }
 
