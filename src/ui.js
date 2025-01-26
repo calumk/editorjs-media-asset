@@ -331,7 +331,7 @@ export default class Ui {
     }
 
     if (status === Ui.status.FAILED) {
-      console.log(this)
+      // console.log(this)
       this.nodes.mediaContainer.innerHTML = `<div class="ck-media-error"><b>Error loading Asset</b> <br> <span class="url">${this.nodes.mediaEl.src} </span></div>`;
     }
   }
