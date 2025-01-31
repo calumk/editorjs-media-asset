@@ -20,6 +20,7 @@ export default class Ui {
     this.config = config;
     this.onSelectFile = onSelectFile;
     this.readOnly = readOnly;
+    this.data = null;
     this.nodes = {
       wrapper: make('div', [this.CSS.baseClass, this.CSS.wrapper]),
       mediaContainer: make('div', [ this.CSS.mediaContainer ]),
@@ -95,6 +96,7 @@ export default class Ui {
    * @returns {Element}
    */
   render(toolData) {
+    this.data = toolData;
     // console.log("RENDER", toolData) 
     if (!toolData.file || Object.keys(toolData.file).length === 0) {
       // console.log("EMPTY")
@@ -215,6 +217,7 @@ export default class Ui {
      * We use eventName variable because IMG and VIDEO tags have different event to be called on source load
      * - IMG: load
      * - VIDEO: loadeddata
+     * - DOWNLOAD: divLoaded (custom event)
      *
      * @type {string}
      */
@@ -232,6 +235,7 @@ export default class Ui {
       attributes.muted = true;
       attributes.playsinline = true;
       attributes.controls = true;
+
 
       if (tag === 'AUDIO') {
         attributes.style = "width: 100%;"
@@ -268,10 +272,7 @@ export default class Ui {
     let eventFired = false;
 
     this.nodes.mediaEl.addEventListener(eventName, () => {
-      // console.log("Fires2025", eventName)
-      // console.log(Ui.status)
       eventFired = true;
-      
       requestAnimationFrame(() => {
         this.toggleStatus(Ui.status.FILLED);
       });
@@ -296,7 +297,16 @@ export default class Ui {
 
     setTimeout(() => {
       if (!eventFired) {
-        this.toggleStatus(Ui.status.FAILED);
+        // Could we use a fetch here to check if the file is available?
+
+        // if fetch is successful then we can ignore the error, otherwise we can show the error
+        fetch(url).then(response => {
+          if (response.status !== 200) {
+            this.toggleStatus(Ui.status.FAILED);
+          }
+        }).catch(error => {
+          this.toggleStatus(Ui.status.FAILED);
+        });
       }
     },4000);
 
@@ -332,7 +342,20 @@ export default class Ui {
 
     if (status === Ui.status.FAILED) {
       // console.log(this)
-      this.nodes.mediaContainer.innerHTML = `<div class="ck-media-error"><b>Error loading Asset</b> <br> <span class="url">${this.nodes.mediaEl.src} </span></div>`;
+
+      let errorElement = make('div', ['ck-media-error']);
+      errorElement.innerHTML = `<b>Error loading Asset</b> <br> <span class="url">${this.nodes.mediaEl.src} </span>`;
+      
+      errorElement.onclick = () => {
+        let url = prompt('Change URL', this.nodes.mediaEl.src);
+        if (url) {
+          this.data.file.url = url;
+          this.fillMedia(url);
+        }
+      }
+      this.nodes.mediaContainer.innerHTML = '';
+      this.nodes.mediaContainer.appendChild(errorElement);
+      
     }
   }
 
