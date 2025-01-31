@@ -298,17 +298,9 @@ export default class Ui {
     setTimeout(() => {
       if (!eventFired) {
         // Could we use a fetch here to check if the file is available?
-
-        // if fetch is successful then we can ignore the error, otherwise we can show the error
-        fetch(url).then(response => {
-          if (response.status !== 200) {
-            this.toggleStatus(Ui.status.FAILED);
-          }
-        }).catch(error => {
-          this.toggleStatus(Ui.status.FAILED);
-        });
+        this.toggleStatus(Ui.status.FAILED);
       }
-    },4000);
+    },5000);
 
   }
 

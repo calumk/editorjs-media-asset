@@ -247,8 +247,6 @@ export default class MediaAssetTool {
         // Completely refresh the block and re-render it with the new URL
         this.data.file.url = url
         this.ui.fillMedia(this.data.file.url);
-
-
       }
     }
 
